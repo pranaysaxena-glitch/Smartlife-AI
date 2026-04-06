@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SmartLife AI</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f5f7fa;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 20px auto;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input {
+            margin: 5px;
+            padding: 8px;
+            width: 80%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        p {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🚀 SmartLife AI</h1>
+
+    <!-- FOOD -->
+    <div class="card">
+        <h3>🍎 Food Expiry Predictor</h3>
+        <input id="temp" type="number" placeholder="Temperature">
+        <input id="humidity" type="number" placeholder="Humidity">
+        <br>
+        <button onclick="predictFood()">Predict</button>
+        <p id="foodResult"></p>
+    </div>
+
+    <!-- HEALTH -->
+    <div class="card">
+        <h3>❤️ Health Risk Predictor</h3>
+        <input id="age" type="number" placeholder="Age">
+        <input id="bmi" type="number" placeholder="BMI">
+        <br>
+        <button onclick="predictHealth()">Predict</button>
+        <p id="healthResult"></p>
+    </div>
+
+    <script>
+
+        function predictFood() {
+            let temp = document.getElementById("temp").value;
+            let humidity = document.getElementById("humidity").value;
+
+            if (temp === "" || humidity === "") {
+                alert("Please enter all values");
+                return;
+            }
+
+            fetch(`http://127.0.0.1:8000/food?temp=${temp}&humidity=${humidity}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("foodResult").innerText =
+                        "Remaining Days: " + data.remaining_days;
+                })
+                .catch(err => {
+                    console.log(err);
+                    alert("Error connecting to backend");
+                });
+        }
+
+
+        function predictHealth() {
+            let age = document.getElementById("age").value;
+            let bmi = document.getElementById("bmi").value;
+
+            if (age === "" || bmi === "") {
+                alert("Please enter all values");
+                return;
+            }
+
+            fetch(`http://127.0.0.1:8000/health?age=${age}&bmi=${bmi}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("healthResult").innerText =
+                        "Risk: " + data.risk;
+                })
+                .catch(err => {
+                    console.log(err);
+                    alert("Error connecting to backend");
+                });
+        }
+
+    </script>
+
+</body>
+
+</html>
